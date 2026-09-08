@@ -200,11 +200,12 @@ const dotClass =
     flex-direction: column;
     gap: var(--space-2xs);
     padding: var(--space-md);
-    background: var(--surface-low);
+    background: var(--surface-lowest);
+    border: 1px solid var(--outline-variant);
+    box-shadow: var(--shadow-card);
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-sm);
-    border: 1px solid transparent;
-    transition: border-color 0.2s ease;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
-  .rel-card:hover { border-color: var(--outline-variant); }
+  .rel-card:hover { border-color: var(--surface-highest); box-shadow: var(--shadow-card-hover); }
 </style>

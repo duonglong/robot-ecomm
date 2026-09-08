@@ -1,48 +1,48 @@
 /* =========================================================================
-   Aether Kinetic — design tokens
-   Ported from sample_designs/aether_kinetic/DESIGN.md.
+   Design tokens — indigo / slate on a cool near-white ground.
 
-   Where the written spec and the reference HTML disagree (canvas #F9F8F6 vs
-   #faf9f7, Klein Blue #002FA7 vs #3654c8), these follow the reference HTML —
-   that is what the screenshots actually render.
-
-   Light only. The reference implementation defines no dark palette, and a
-   guessed one would not be the same design.
+   Ported from the supplied Tailwind reference. The utility classes are gone;
+   the values are not. Where the reference used a Tailwind scale step, the
+   resolved hex is here so nothing depends on a framework being present.
    ========================================================================= */
 
 :root {
-  /* -- surfaces: warm bone through stone ------------------------------- */
-  --surface: #faf9f7;
-  --surface-dim: #dadad8;
-  --surface-lowest: #ffffff;
-  --surface-low: #f4f3f1;
-  --surface-container: #efeeec;
-  --surface-high: #e9e8e6;
-  --surface-highest: #e3e2e0;
+  /* -- ground and surfaces --------------------------------------------- */
+  --surface: #fbfbfd;          /* page ground */
+  --surface-lowest: #ffffff;   /* cards */
+  --surface-low: #f8fafc;      /* slate-50  — image stage top */
+  --surface-container: #f1f5f9;/* slate-100 — hairlines inside cards, pills */
+  --surface-high: #e2e8f0;     /* slate-200 */
+  --surface-highest: #cbd5e1;  /* slate-300 */
+  --surface-dim: #94a3b8;
 
   /* -- ink -------------------------------------------------------------- */
-  --on-surface: #1a1c1b;
-  --on-surface-variant: #46464b;
-  --outline: #76777b;
-  --outline-variant: #c7c6cb;
+  --on-surface: #0f172a;       /* slate-900 — titles */
+  --on-surface-variant: #64748b;/* slate-500 — body copy */
+  --outline: #94a3b8;          /* slate-400 — micro labels */
+  --outline-variant: #e2e8f0;  /* slate-200 — card borders */
 
-  --inverse-surface: #2f3130;
-  --inverse-on-surface: #f1f1ef;
+  --inverse-surface: #0f172a;
+  --inverse-on-surface: #f8fafc;
 
-  /* -- signals: used sparingly, never as background fills ---------------- */
-  --primary: #000000;
+  /* -- action and signal ------------------------------------------------ */
+  --primary: #020617;          /* slate-950 — solid buttons, active pill */
+  --primary-hover: #1e293b;    /* slate-800 */
   --on-primary: #ffffff;
-  --signal-blue: #3654c8;
-  --signal-amber: #d36400;
-  --error: #ba1a1a;
+  --accent: #4f46e5;           /* indigo-600 */
+  --accent-soft: #6366f1;      /* indigo-500 */
+  --accent-wash: #eef2ff;      /* indigo-50 */
+  --signal-blue: #4f46e5;
+  --signal-amber: #d97706;
+  --error: #dc2626;
 
   /* -- type ------------------------------------------------------------- */
-  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system,
-    'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo,
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui,
+    -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Space Grotesk Variable', ui-monospace, SFMono-Regular, Menlo,
     Consolas, monospace;
 
-  /* -- spacing scale ---------------------------------------------------- */
+  /* -- spacing ---------------------------------------------------------- */
   --space-2xs: 0.125rem;
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -54,31 +54,29 @@
   --space-4xl: 6rem;
   --space-5xl: 9rem;
 
-  /* Header height. Anything that has to clear the sticky bar — sticky
-     columns, scroll-margin on anchor targets — derives from this, so the
-     two cannot drift apart when the bar is resized. */
-  --header-h: 120px;
-
-  --gutter: 1rem;
+  --header-h: 80px;            /* h-20 in the reference */
+  --gutter: 1.5rem;            /* px-6 */
   --container-max: 1440px;
   --measure: 68ch;
 
-  /* -- radii: micro-bevels, as on milled aluminium ---------------------- */
-  --radius-sm: 0.125rem;
-  --radius: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* -- shape: noticeably rounder than before ---------------------------- */
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;            /* buttons */
+  --radius-md: 0.75rem;        /* rounded-xl — logo tile */
+  --radius-lg: 1rem;           /* rounded-2xl — cards */
+  --radius-xl: 1.25rem;
   --radius-full: 9999px;
+
+  /* -- elevation: ambient, never heavy ---------------------------------- */
+  --shadow-card: 0 2px 8px -2px rgb(0 0 0 / 0.04);
+  --shadow-card-hover: 0 12px 24px -8px rgb(0 0 0 / 0.08);
+  --shadow-tile: 0 4px 6px -1px rgb(79 70 229 / 0.2);
 
   color-scheme: light;
 }
 
-@media (min-width: 768px) {
-  :root { --gutter: 1.5rem; }
-}
-@media (min-width: 1024px) {
-  :root { --gutter: 2.5rem; }
+@media (min-width: 640px) {
+  :root { --gutter: 2.5rem; }  /* sm:px-10 */
 }
 
 *,
@@ -90,17 +88,19 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--surface);
-  color: var(--on-surface);
+  color: #1e293b;
   font-family: var(--font-sans);
   font-size: 15px;
   line-height: 24px;
-  letter-spacing: -0.005em;
+  /* The reference enables these Jakarta alternates; they give the single-
+     storey a and rounder g that make the face look like the mockup. */
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Tabular numerals everywhere mono is used: spec values and counts must
-   align vertically in a column, which proportional digits break. */
+::selection { background: var(--accent-soft); color: #fff; }
+
 .mono,
 code,
 kbd,
@@ -108,72 +108,63 @@ pre,
 .label-caps,
 .spec-value {
   font-family: var(--font-mono);
-  font-feature-settings: 'tnum' 1;
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------------------------------------------------------------- type ---- */
 
 .display {
-  font-size: 40px;
-  line-height: 48px;
-  font-weight: 400;
-  letter-spacing: -0.03em;
+  font-family: var(--font-mono);
+  font-size: 34px;
+  line-height: 42px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 @media (min-width: 768px) {
-  .display { font-size: 64px; line-height: 72px; letter-spacing: -0.04em; }
+  .display { font-size: 48px; line-height: 56px; letter-spacing: -0.03em; }
 }
 
 h1,
 .headline-lg {
-  font-size: 28px;
-  line-height: 36px;
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  line-height: 34px;
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0;
 }
 @media (min-width: 768px) {
-  h1,
-  .headline-lg { font-size: 40px; line-height: 48px; letter-spacing: -0.03em; }
+  h1, .headline-lg { font-size: 32px; line-height: 40px; }
 }
 
 h2,
 .headline-md {
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
   margin: 0;
 }
 
 h3,
 .headline-sm {
-  font-size: 18px;
-  line-height: 24px;
-  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0;
 }
 
-.body-lg {
-  font-size: 18px;
-  line-height: 28px;
-  letter-spacing: -0.01em;
-}
+.body-lg { font-size: 16px; line-height: 26px; }
+.body-sm { font-size: 12px; line-height: 19px; }
 
-.body-sm {
-  font-size: 13px;
-  line-height: 20px;
-  letter-spacing: 0;
-}
-
-/* Micro labels. 0.12em tracking is what keeps 10px uppercase legible. */
+/* Micro label: 11px, wide tracking, uppercase. */
 .label-caps {
-  font-size: 10px;
-  line-height: 14px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--outline);
 }
@@ -182,6 +173,7 @@ h3,
   font-family: var(--font-mono);
   font-size: 11px;
   line-height: 16px;
+  font-weight: 600;
   letter-spacing: 0.04em;
 }
 
@@ -189,7 +181,7 @@ h3,
   font-family: var(--font-mono);
   font-size: 14px;
   line-height: 20px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 
@@ -198,20 +190,18 @@ p { margin: 0 0 var(--space-md); }
 a { color: inherit; text-decoration: none; }
 
 .link-underline {
+  color: var(--accent);
+  font-weight: 600;
   text-decoration: underline;
-  text-decoration-color: var(--outline-variant);
+  text-decoration-color: color-mix(in oklab, var(--accent) 35%, transparent);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.15s ease;
 }
-.link-underline:hover { text-decoration-color: var(--on-surface); }
+.link-underline:hover { text-decoration-color: var(--accent); }
 
 img { max-width: 100%; height: auto; display: block; }
 
-hr {
-  border: 0;
-  border-top: 1px solid var(--outline-variant);
-  margin: var(--space-xl) 0;
-}
+hr { border: 0; border-top: 1px solid var(--outline-variant); margin: var(--space-xl) 0; }
 
 /* ------------------------------------------------------------- layout ---- */
 
@@ -227,15 +217,12 @@ hr {
 .muted { color: var(--on-surface-variant); }
 .dim { color: var(--outline); }
 
-/* Section eyebrow: mono label on the left, meta on the right, hairline under.
-   This strip is the spine of the whole design — it appears above nearly every
-   section in the reference. */
 .rule {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-md);
-  padding-bottom: var(--space-sm);
+  padding-bottom: var(--space-md);
   border-bottom: 1px solid var(--outline-variant);
   margin-bottom: var(--space-lg);
 }
@@ -250,7 +237,7 @@ hr {
   flex: none;
   background: var(--outline);
 }
-.dot.blue { background: var(--signal-blue); }
+.dot.blue { background: var(--accent); }
 .dot.amber { background: var(--signal-amber); }
 .dot.dark { background: var(--on-surface); }
 
@@ -267,34 +254,31 @@ hr {
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  min-height: 48px;
+  min-height: 44px;
   padding: 0 var(--space-lg);
   border: 1px solid transparent;
   border-radius: var(--radius);
   background: var(--primary);
   color: var(--on-primary);
   font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  /* Physical press: a half-pixel of travel, no bounce. */
-  transition: background 0.12s ease, transform 0.06s ease, border-color 0.15s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
-.btn:hover { background: #1c1d21; }
-.btn:active { transform: translateY(0.5px); }
+.btn:hover { background: var(--primary-hover); }
 
 .btn-secondary {
-  background: transparent;
+  background: var(--surface-lowest);
   color: var(--on-surface);
   border-color: var(--outline-variant);
 }
 .btn-secondary:hover {
-  background: var(--surface-low);
-  border-color: var(--on-surface);
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-/* Ghost action carries mechanical brackets: [ READ MONOGRAPH ] */
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -305,16 +289,17 @@ hr {
   border: 0;
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--on-surface-variant);
   transition: color 0.15s ease;
 }
-.btn-ghost:hover { color: var(--on-surface); background: none; }
+.btn-ghost:hover { color: var(--accent); background: none; }
 
 .btn[aria-disabled='true'],
 .btn:disabled {
-  background: var(--surface-highest);
+  background: var(--surface-container);
   color: var(--outline);
   border-color: transparent;
   cursor: not-allowed;
@@ -327,34 +312,38 @@ hr {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-  height: 32px;
-  padding: 0 var(--space-md);
+  min-height: 38px;
+  padding: 0 var(--space-lg);
   border-radius: var(--radius-full);
   background: var(--surface-container);
   color: var(--on-surface-variant);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
-.chip:hover { color: var(--on-surface); }
+.chip:hover { background: var(--surface-high); color: var(--on-surface); }
 .chip[aria-current='page'],
 .chip.is-active {
   background: var(--primary);
   color: var(--on-primary);
+  font-weight: 700;
+  box-shadow: var(--shadow-card);
 }
+.chip.is-active:hover { background: var(--primary-hover); color: var(--on-primary); }
 
 .tag {
   display: inline-flex;
   align-items: center;
   padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--outline-variant);
-  border-radius: var(--radius);
+  border-radius: var(--radius-full);
+  background: var(--surface-container);
   font-family: var(--font-mono);
   font-size: 11px;
   line-height: 16px;
+  font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--on-surface-variant);
 }
@@ -362,39 +351,38 @@ hr {
 /* -------------------------------------------------------------- cards ---- */
 
 .panel {
-  background: var(--surface-low);
+  background: var(--surface-lowest);
+  border: 1px solid var(--outline-variant);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
 }
 
 .well {
-  background: var(--surface-container);
+  background: linear-gradient(to bottom, var(--surface-low), var(--surface-container));
   border-radius: var(--radius);
 }
 
 /* --------------------------------------------------------- spec table ---- */
 
-/* Key left in micro caps, value right in mono. Rows separated by hairlines,
-   which is the "technical ledger" pattern from the reference article page. */
 .ledger { width: 100%; border-collapse: collapse; }
 .ledger th,
 .ledger td {
   padding: var(--space-sm) 0;
-  border-bottom: 1px solid var(--surface-highest);
+  border-bottom: 1px solid var(--surface-container);
   text-align: left;
 }
 .ledger th {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--outline);
 }
 .ledger td {
   font-family: var(--font-mono);
   font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-weight: 600;
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
@@ -420,16 +408,14 @@ pre {
 }
 pre code { background: none; padding: 0; }
 
-/* Shiki writes its theme background inline. The palette has one recessed
-   surface and code blocks use it like every other inset well. */
 .astro-code,
 .astro-code span { background-color: transparent !important; }
-.astro-code { background: var(--surface-container) !important; }
+.astro-code { background: var(--surface-low) !important; }
 
 /* --------------------------------------------------------------- misc ---- */
 
 :where(a, button, summary, input):focus-visible {
-  outline: 1px solid var(--signal-blue);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -451,16 +437,13 @@ pre code { background: none; padding: 0; }
   gap: var(--space-sm);
   overflow-x: auto;
   scrollbar-width: none;
-  /* Bleed to the screen edge so the row reads as scrollable on mobile. */
   margin-inline: calc(var(--gutter) * -1);
   padding-inline: var(--gutter);
 }
 .scroll-x::-webkit-scrollbar { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

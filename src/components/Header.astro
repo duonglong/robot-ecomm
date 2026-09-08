@@ -34,10 +34,10 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   header {
     position: sticky;
     top: 0;
-    z-index: 20;
-    background: rgba(250, 249, 247, 0.85);
+    z-index: 40;
+    background: rgb(255 255 255 / 0.85);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--outline-variant);
+    border-bottom: 1px solid var(--surface-container);
   }
   .bar {
     display: flex;
@@ -49,61 +49,62 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: 14px;
   }
-  /* Shipped at 3x; constrained by height so the lockup keeps its baseline
-     whatever the artwork's aspect ratio is. */
   .mark {
-    height: 28px;
+    height: 34px;
     width: auto;
     flex: none;
     display: block;
+    transition: transform 0.2s ease;
   }
-  /* The wordmark is the one place tracking opens up rather than tightens —
-     it reads as an engraved chassis stamp, matching the reference logo. */
+  .brand:hover .mark { transform: scale(1.05); }
+
   .wordmark {
     font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
+    color: var(--on-surface);
   }
+
   nav {
     display: flex;
-    gap: var(--space-lg);
+    align-items: center;
+    gap: var(--space-xl);
   }
   .nav-link {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--on-surface-variant);
-    padding-block: var(--space-sm);
     position: relative;
-    transition: color 0.15s ease;
+    padding-block: var(--space-sm);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--outline);
+    transition: color 0.2s ease;
   }
-  .nav-link:hover { color: var(--on-surface); }
-  .nav-link[aria-current='page'] { color: var(--on-surface); }
+  .nav-link:hover { color: #1e293b; }
+  .nav-link[aria-current='page'] {
+    color: var(--on-surface);
+    font-weight: 700;
+  }
   .nav-link[aria-current='page']::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 1px;
+    height: 2px;
     background: var(--on-surface);
   }
-  @media (max-width: 420px) {
+
+  @media (max-width: 640px) {
     nav { gap: var(--space-md); }
-    .wordmark { font-size: 12px; letter-spacing: 0.12em; }
+    .mark { height: 30px; }
+    .wordmark { font-size: 12px; letter-spacing: 0.16em; }
   }
-  /* Vietnamese nav labels are ~40% wider than the English ones. Below 380px
-     brand + nav leave under 16px of slack, so drop the wordmark and keep the
-     mark — the logo still identifies the site and the nav stops crowding. */
   @media (max-width: 420px) {
-    .mark { height: 24px; }
-  }
-  @media (max-width: 379px) {
     .wordmark {
       position: absolute;
       width: 1px;

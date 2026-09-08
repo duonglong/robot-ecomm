@@ -5,6 +5,8 @@ sku: TODO-022
 category: robots
 availability: in-stock
 order: 8
+image: ../../assets/products/robot-camera-ai-thong-minh.jpg
+imageAlt: "Robot camera AI thân trắng với ống kính tròn lớn phía trước"
 specs: []
 ---
 

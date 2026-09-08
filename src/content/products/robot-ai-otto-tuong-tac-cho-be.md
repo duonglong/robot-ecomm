@@ -5,6 +5,8 @@ sku: TODO-019
 category: robots
 availability: in-stock
 order: 5
+image: ../../assets/products/robot-ai-otto-tuong-tac-cho-be.jpg
+imageAlt: "Robot OTTO thân cao với màn hình mặt cười, đế di chuyển có đèn"
 specs: []
 ---
 

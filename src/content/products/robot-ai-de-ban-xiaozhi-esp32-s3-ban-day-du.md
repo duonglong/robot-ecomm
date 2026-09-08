@@ -5,6 +5,8 @@ sku: TODO-014
 category: robots
 availability: in-stock
 order: 3
+image: ../../assets/products/robot-ai-de-ban-xiaozhi-esp32-s3-ban-day-du.jpg
+imageAlt: "Robot phục vụ Xiaozhi ba tầng khay, màn hình mặt cười, đế có đèn LED"
 specs: []
 ---
 

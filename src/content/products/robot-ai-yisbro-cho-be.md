@@ -5,6 +5,8 @@ sku: TODO-020
 category: robots
 availability: in-stock
 order: 6
+image: ../../assets/products/robot-ai-yisbro-cho-be.jpg
+imageAlt: "Robot Yisbro nhỏ màu trắng xanh, màn hình mặt cười, dáng tròn"
 specs: []
 ---
 

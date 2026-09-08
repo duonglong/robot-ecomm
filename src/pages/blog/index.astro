@@ -65,12 +65,13 @@ const [lead, ...rest] = posts;
     flex-direction: column;
     gap: var(--space-sm);
     padding: var(--space-lg);
-    background: var(--surface-low);
+    background: var(--surface-lowest);
+    border: 1px solid var(--outline-variant);
+    box-shadow: var(--shadow-card);
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-2xl);
-    border: 1px solid transparent;
-    transition: border-color 0.2s ease;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
-  .lead:hover { border-color: var(--outline-variant); }
+  .lead:hover { border-color: var(--surface-highest); box-shadow: var(--shadow-card-hover); }
   .lead h2, .lead p { margin: 0; }
 </style>

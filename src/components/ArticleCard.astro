@@ -44,13 +44,14 @@ const minutes = Math.max(1, Math.round(words / 200));
     justify-content: space-between;
     gap: var(--space-md);
     padding: var(--space-md);
-    background: var(--surface-low);
+    background: var(--surface-lowest);
+    border: 1px solid var(--outline-variant);
+    box-shadow: var(--shadow-card);
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-sm);
-    border: 1px solid transparent;
-    transition: border-color 0.2s ease;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
-  .row:hover { border-color: var(--outline-variant); }
+  .row:hover { border-color: var(--surface-highest); box-shadow: var(--shadow-card-hover); }
   .text { min-width: 0; }
   .meta {
     display: flex;

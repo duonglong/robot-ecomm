@@ -5,6 +5,8 @@ sku: TODO-016
 category: robots
 availability: in-stock
 order: 4
+image: ../../assets/products/robot-de-ban-thong-minh-olice.jpg
+imageAlt: "Robot Olice thân đứng với màn hình cảm ứng hiển thị thực đơn"
 specs: []
 ---
 
