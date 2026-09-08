@@ -1,0 +1,206 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BuyButton from '../../components/BuyButton.astro';
+import SpecGrid from '../../components/SpecGrid.astro';
+import { SHOP_URL } from '../../consts';
+import { AVAILABILITY_LABEL, CATEGORY_LABEL, isPublished } from '../../utils';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const products = await getCollection('products', isPublished);
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+};
+
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const { Content } = await render(product);
+const d = product.data;
+
+// Cross-links in both directions, so the page points back into the
+// documentation instead of dead-ending at an outbound marketplace link:
+// guides that mention this product, and guides this product links to.
+const productHref = `/products/${product.id}/`;
+const related = (await getCollection('guides', isPublished))
+  .filter(
+    (g) =>
+      g.body?.includes(productHref) || product.body?.includes(`/guides/${g.id}/`),
+  )
+  .slice(0, 3);
+
+const purchaseUrl = d.buyUrl || SHOP_URL;
+
+// Product markup without `offers` — we publish no price, and an Offer without
+// one (or with one that disagrees with the marketplace) gets suppressed.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.title,
+  description: d.tagline,
+  sku: d.sku,
+  category: CATEGORY_LABEL[d.category],
+  ...(purchaseUrl ? { url: purchaseUrl } : {}),
+};
+
+const dotClass =
+  d.availability === 'in-stock' ? 'blue' : d.availability === 'preorder' ? 'amber' : '';
+---
+
+<BaseLayout title={d.title} description={d.tagline}>
+  <div class="container">
+    <div class="rule crumb">
+      <a href="/products/" class="label-caps back">&larr; Sản phẩm</a>
+      <span class="mono-spec-sm dim">{CATEGORY_LABEL[d.category]} // {d.sku}</span>
+    </div>
+
+    <div class="layout">
+      <div class="media">
+        <div class="well frame">
+          {
+            d.image ? (
+              <Image src={d.image} alt={d.imageAlt ?? d.title} widths={[480, 960, 1280]} sizes="(max-width: 900px) 92vw, 640px" />
+            ) : (
+              <span class="placeholder label-caps">Chưa có ảnh</span>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="detail">
+        <span class="status label-caps">
+          <span class:list={['dot', dotClass]}></span>
+          {AVAILABILITY_LABEL[d.availability]}
+        </span>
+
+        <h1>{d.title}</h1>
+        <p class="body-lg muted tagline">{d.tagline}</p>
+
+        <BuyButton buyUrl={d.buyUrl} availability={d.availability} sku={d.sku} />
+
+        {
+          d.specs.length > 0 && (
+            <section class="specs">
+              <div class="rule">
+                <span class="label-caps">Thông số</span>
+                <span class="mono-spec-sm dim">{d.specs.length} mục</span>
+              </div>
+              <SpecGrid specs={d.specs} />
+            </section>
+          )
+        }
+      </div>
+    </div>
+
+    <div class:list={['lower', { 'has-aside': related.length > 0 }]}>
+      <article class="prose">
+        <Content />
+      </article>
+
+      {
+        related.length > 0 && (
+          <aside class="related">
+            <div class="rule">
+              <span class="label-caps">Tài liệu</span>
+            </div>
+            {related.map((guide) => (
+              <a href={`/guides/${guide.id}/`} class="rel-card">
+                <span class="label-caps">Hướng dẫn</span>
+                <span class="headline-sm">{guide.data.title}</span>
+                <span class="body-sm muted">{guide.data.description}</span>
+              </a>
+            ))}
+          </aside>
+        )
+      }
+    </div>
+  </div>
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)}></script>
+</BaseLayout>
+
+<style>
+  .crumb { margin-top: var(--space-lg); }
+  .back { color: var(--on-surface-variant); }
+  .back:hover { color: var(--on-surface); }
+
+  .layout {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+    align-items: start;
+    margin-bottom: var(--space-2xl);
+  }
+  @media (min-width: 900px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+      gap: var(--space-3xl);
+    }
+    /* The image column is tall; the buy dock should stay reachable while the
+       reader scrolls the spec matrix. */
+    .detail { position: sticky; top: 76px; }
+  }
+
+  .frame {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  /* At 1440px a 4:3 well is ~750px tall and pushes everything below the
+     fold. Cap it and let the image cover. */
+  @media (min-width: 900px) {
+    .frame { max-height: 68vh; aspect-ratio: auto; height: 34rem; }
+  }
+  .frame :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .placeholder { color: var(--outline); }
+
+  .detail h1 { margin-block: var(--space-sm) var(--space-sm); }
+  .tagline { margin-bottom: var(--space-xl); }
+  .specs { margin-top: var(--space-xl); }
+
+  .lower {
+    display: grid;
+    gap: var(--space-2xl);
+    grid-template-columns: 1fr;
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--outline-variant);
+  }
+  /* Without related guides the sidebar column would sit empty, leaving a
+     third of the page blank next to the prose. */
+  @media (min-width: 900px) {
+    .lower.has-aside {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+      gap: var(--space-3xl);
+    }
+  }
+
+  .prose { max-width: 62ch; }
+  .prose :global(h2) {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
+  }
+  .prose :global(ul),
+  .prose :global(ol) { padding-left: var(--space-lg); }
+  .prose :global(li) { margin-bottom: var(--space-xs); }
+
+  .rel-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-md);
+    background: var(--surface-low);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-sm);
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .rel-card:hover { border-color: var(--outline-variant); }
+</style>

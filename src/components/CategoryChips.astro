@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORY_LABEL } from '../utils';
+
+interface Props {
+  products: CollectionEntry<'products'>[];
+  /** undefined = the "all products" page. */
+  active?: keyof typeof CATEGORY_LABEL;
+}
+
+const { products, active } = Astro.props;
+
+// Only offer a filter for categories that actually hold something.
+const groups = (Object.keys(CATEGORY_LABEL) as Array<keyof typeof CATEGORY_LABEL>)
+  .map((key) => ({
+    key,
+    label: CATEGORY_LABEL[key],
+    count: products.filter((p) => p.data.category === key).length,
+  }))
+  .filter((g) => g.count > 0);
+---
+
+{
+  groups.length > 1 && (
+    <nav class="scroll-x filters" aria-label="Nhóm sản phẩm">
+      <a
+        href="/products/"
+        class:list={['chip', { 'is-active': active === undefined }]}
+        aria-current={active === undefined ? 'page' : undefined}
+      >
+        Tất cả ({products.length})
+      </a>
+      {groups.map((g) => (
+        <a
+          href={`/products/danh-muc/${g.key}/`}
+          class:list={['chip', { 'is-active': active === g.key }]}
+          aria-current={active === g.key ? 'page' : undefined}
+        >
+          {g.label} ({g.count})
+        </a>
+      ))}
+    </nav>
+  )
+}
+
+<style>
+  .filters {
+    margin-bottom: var(--space-md);
+  }
+</style>

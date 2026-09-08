@@ -1,0 +1,11 @@
+dist/
+.astro/
+node_modules/
+.env
+.env.production
+.wrangler/
+.DS_Store
+npm-debug.log*
+screenshots/
+.shopee-profile/
+shopee-products.csv

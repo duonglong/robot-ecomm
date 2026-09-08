@@ -1,0 +1,110 @@
+---
+import { NAV, SITE_TITLE } from '../consts';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header>
+  <div class="container bar">
+    <a href="/" class="brand" aria-label={`${SITE_TITLE} — trang chủ`}>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" class="mark">
+        <path d="M12 2.5 21.5 21H2.5L12 2.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+        <circle cx="16.4" cy="6.2" r="1.5" fill="currentColor"></circle>
+      </svg>
+      <span class="wordmark">{SITE_TITLE}</span>
+    </a>
+
+    <nav aria-label="Điều hướng chính">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class="nav-link"
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(250, 249, 247, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-height: 56px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .mark {
+    color: var(--on-surface);
+    flex: none;
+  }
+  /* The wordmark is the one place tracking opens up rather than tightens —
+     it reads as an engraved chassis stamp, matching the reference logo. */
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  nav {
+    display: flex;
+    gap: var(--space-lg);
+  }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+    padding-block: var(--space-sm);
+    position: relative;
+    transition: color 0.15s ease;
+  }
+  .nav-link:hover { color: var(--on-surface); }
+  .nav-link[aria-current='page'] { color: var(--on-surface); }
+  .nav-link[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--on-surface);
+  }
+  @media (max-width: 420px) {
+    nav { gap: var(--space-md); }
+    .wordmark { font-size: 12px; letter-spacing: 0.12em; }
+  }
+  /* Vietnamese nav labels are ~40% wider than the English ones. Below 380px
+     brand + nav leave under 16px of slack, so drop the wordmark and keep the
+     mark — the logo still identifies the site and the nav stops crowding. */
+  @media (max-width: 379px) {
+    .wordmark {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import { parseSpec } from '../utils';
+
+interface Props {
+  specs: string[];
+}
+
+const { specs } = Astro.props;
+
+const cells = specs.map(parseSpec);
+---
+
+{
+  cells.length > 0 && (
+    <div class="grid">
+      {cells.map((cell) => (
+        <div class="cell">
+          {cell.key && <span class="label-caps">{cell.key}</span>}
+          <span class="value mono-spec-lg">{cell.value}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--outline-variant);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  /* Cells are separated by the grid's 1px gap showing through, not by
+     margins — the "edge-to-edge architectural seam" from the spec. */
+  .cell {
+    background: var(--surface-container);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+  .value {
+    color: var(--on-surface);
+    overflow-wrap: anywhere;
+  }
+  /* An odd final cell would leave a ragged hole; stretch it across. */
+  .cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+</style>

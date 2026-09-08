@@ -1,0 +1,187 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import { formatDate } from '../utils';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author: string;
+  tags: string[];
+  heroImage?: ImageMetadata;
+  backHref: string;
+  backLabel: string;
+  kicker: string;
+  minutes: number;
+}
+
+const {
+  title, description, pubDate, updatedDate, author, tags,
+  heroImage, backHref, backLabel, kicker, minutes,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description} type="article">
+  <div class="container">
+    <div class="rule crumb">
+      <a href={backHref} class="label-caps back">&larr; {backLabel}</a>
+      <span class="mono-spec-sm dim">{minutes} phút đọc</span>
+    </div>
+
+    <article class="article">
+      <header>
+        <span class="status mono-spec-sm kicker">
+          <span class="dot blue"></span>
+          {kicker}
+        </span>
+        <h1>{title}</h1>
+        <p class="body-lg muted">{description}</p>
+
+        <div class="byline">
+          <span>
+            <span class="label-caps">Tác giả</span>
+            <span class="mono-spec-lg">{author}</span>
+          </span>
+          <span>
+            <span class="label-caps">Đăng ngày</span>
+            <span class="mono-spec-lg">{formatDate(pubDate)}</span>
+          </span>
+          {
+            updatedDate && (
+              <span>
+                <span class="label-caps">Cập nhật</span>
+                <span class="mono-spec-lg">{formatDate(updatedDate)}</span>
+              </span>
+            )
+          }
+        </div>
+      </header>
+
+      {
+        heroImage && (
+          <figure class="hero well">
+            <Image src={heroImage} alt="" widths={[720, 1200]} sizes="(max-width: 800px) 92vw, 720px" />
+          </figure>
+        )
+      }
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      {
+        tags.length > 0 && (
+          <footer class="tags">
+            <span class="label-caps">Chủ đề</span>
+            <span class="tag-row">
+              {tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </span>
+          </footer>
+        )
+      }
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .crumb { margin-top: var(--space-lg); }
+  .back { color: var(--on-surface-variant); }
+  .back:hover { color: var(--on-surface); }
+
+  .article {
+    max-width: 46rem;
+    margin-inline: auto;
+    padding-bottom: var(--space-2xl);
+  }
+  .kicker { text-transform: uppercase; margin-bottom: var(--space-md); }
+  h1 { margin-bottom: var(--space-md); }
+
+  .byline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    padding-block: var(--space-lg);
+    margin-top: var(--space-lg);
+    border-top: 1px solid var(--outline-variant);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .byline > span {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .hero {
+    margin: var(--space-xl) 0;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+  }
+  .hero :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  .prose { margin-top: var(--space-xl); }
+  .prose :global(h2) {
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--surface-highest);
+  }
+  .prose :global(h3) {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
+  }
+  .prose :global(p) { font-size: 17px; line-height: 28px; }
+  .prose :global(ul),
+  .prose :global(ol) { padding-left: var(--space-lg); font-size: 17px; line-height: 28px; }
+  .prose :global(li) { margin-bottom: var(--space-xs); }
+  .prose :global(blockquote) {
+    margin: var(--space-xl) 0;
+    padding: var(--space-lg);
+    background: var(--surface-low);
+    border-radius: var(--radius-lg);
+    font-size: 18px;
+    line-height: 28px;
+    font-style: italic;
+    color: var(--on-surface);
+  }
+  .prose :global(blockquote p:last-child) { margin-bottom: 0; }
+  .prose :global(img) {
+    border-radius: var(--radius);
+    margin-block: var(--space-xl);
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-xl) 0;
+  }
+  .prose :global(th) {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--outline);
+    text-align: left;
+    padding: var(--space-sm) var(--space-sm) var(--space-sm) 0;
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .prose :global(td) {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: var(--space-sm) var(--space-sm) var(--space-sm) 0;
+    border-bottom: 1px solid var(--surface-highest);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tags {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--outline-variant);
+  }
+  .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+</style>

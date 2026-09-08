@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { isPublished } from '../../utils';
+
+const posts = (await getCollection('posts', isPublished)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const [lead, ...rest] = posts;
+---
+
+<BaseLayout
+  title="Nhật ký"
+  description="Nhật ký lắp ráp, mổ xẻ linh kiện và những sự cố gặp phải khi dựng robot AI."
+>
+  <div class="container page">
+    <header>
+      <div class="rule">
+        <span class="label-caps">Lưu trữ</span>
+        <span class="mono-spec-sm dim">{posts.length} bài</span>
+      </div>
+      <h1>Nhật ký</h1>
+      <p class="body-lg muted lede">
+        Chúng tôi đã dựng gì, hỏng ở đâu, và lần sau sẽ làm khác thế nào.
+        <a href="/rss.xml" class="link-underline">Theo dõi qua RSS</a>.
+      </p>
+    </header>
+
+    {
+      lead && (
+        <a href={`/blog/${lead.id}/`} class="lead">
+          <span class="label-caps">Bài mới nhất</span>
+          <h2>{lead.data.title}</h2>
+          <p class="body-lg muted">{lead.data.description}</p>
+          <span class="btn-ghost">[ Đọc tiếp &rarr; ]</span>
+        </a>
+      )
+    }
+
+    {
+      rest.length > 0 && (
+        <section>
+          <div class="rule">
+            <span class="label-caps">Bài đã đăng</span>
+            <span class="mono-spec-sm dim">{rest.length} bài</span>
+          </div>
+          {rest.map((entry) => (
+            <ArticleCard entry={entry} base="/blog" />
+          ))}
+        </section>
+      )
+    }
+
+    {posts.length === 0 && <p class="muted">Chưa có bài viết nào.</p>}
+  </div>
+</BaseLayout>
+
+<style>
+  .page { padding-top: var(--space-lg); max-width: 56rem; }
+  h1 { margin-bottom: var(--space-sm); }
+  .lede { max-width: 50ch; margin-bottom: var(--space-xl); }
+  .lead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    background: var(--surface-low);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-2xl);
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .lead:hover { border-color: var(--outline-variant); }
+  .lead h2, .lead p { margin: 0; }
+</style>

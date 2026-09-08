@@ -1,0 +1,74 @@
+---
+import { CONTACT_EMAIL, DISCORD_URL, GITHUB_URL, SHIPS_FROM, SITE_TITLE } from '../consts';
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="container">
+    <div class="rule">
+      <span class="label-caps">Giao hàng</span>
+      {SHIPS_FROM && <span class="mono-spec-sm dim">Giao từ {SHIPS_FROM}</span>}
+    </div>
+
+    <div class="cols">
+      <p class="muted body-sm blurb">
+        Phần cứng và tài liệu lắp ráp cho những người tự tay dựng robot.
+        Mọi linh kiện ở đây đều là thứ chúng tôi đã trực tiếp sử dụng.
+      </p>
+      <nav aria-label="Liên kết chân trang">
+        <a href="/products/" class="mono-spec-sm">Sản phẩm</a>
+        <a href="/guides/" class="mono-spec-sm">Hướng dẫn</a>
+        <a href="/blog/" class="mono-spec-sm">Nhật ký</a>
+        <a href="/rss.xml" class="mono-spec-sm">RSS</a>
+        <a href={`mailto:${CONTACT_EMAIL}`} class="mono-spec-sm">Liên hệ</a>
+        {DISCORD_URL && <a href={DISCORD_URL} class="mono-spec-sm">Discord</a>}
+        {GITHUB_URL && <a href={GITHUB_URL} class="mono-spec-sm">GitHub</a>}
+      </nav>
+    </div>
+
+    <p class="label-caps colophon">
+      {SITE_TITLE} © {year} — Dựng bằng Astro, phân phối qua Cloudflare
+    </p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    margin-top: var(--space-4xl);
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-top: 1px solid var(--outline-variant);
+    background: var(--surface-low);
+  }
+  .cols {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+    margin-bottom: var(--space-2xl);
+  }
+  @media (min-width: 768px) {
+    .cols {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-3xl);
+    }
+  }
+  .blurb {
+    max-width: 44ch;
+    margin: 0;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-lg);
+    align-content: start;
+  }
+  nav a {
+    color: var(--on-surface-variant);
+    text-transform: uppercase;
+    transition: color 0.15s ease;
+  }
+  nav a:hover { color: var(--on-surface); }
+  .colophon {
+    margin: 0;
+    color: var(--outline);
+  }
+</style>

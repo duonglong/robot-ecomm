@@ -1,0 +1,247 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { formatDate, isPublished } from '../utils';
+
+const products = (await getCollection('products', isPublished)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+// Fill the shelf to a full row: featured first, then whatever else exists.
+// A 4-column grid holding two cards reads as a broken layout, not a choice.
+const featured = products.filter((p) => p.data.featured);
+const shelf = [...featured, ...products.filter((p) => !p.data.featured)].slice(0, 4);
+const hero = shelf[0];
+
+const posts = (await getCollection('posts', isPublished)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const guides = (await getCollection('guides', isPublished)).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <div class="container">
+    <!-- Dispatch strip: the reference's live status band under the header. -->
+    <div class="dispatch">
+      <span class="status mono-spec-sm">
+        <span class="dot blue"></span>
+        <span class="dim">Tình trạng giao hàng: bình thường</span>
+      </span>
+      <span class="mono-spec-sm dim">{products.length} sản phẩm // {guides.length} hướng dẫn</span>
+    </div>
+
+    <!-- Gallery pause: the hero gets the vertical breathing room. -->
+    <section class="hero">
+      <p class="label-caps">Robot AI · Bộ kit DIY · Bo mạch ESP32</p>
+      <h1 class="display">Robot AI: mua chạy ngay, hoặc tự tay lắp.</h1>
+      <p class="body-lg muted lede">
+        Robot trợ lý dùng được ngay khi mở hộp, bộ kit DIY cho người thích tự
+        làm, và bo mạch ESP32 cho người tự viết firmware. Mỗi cấp độ đều có
+        hướng dẫn riêng.
+      </p>
+      <div class="cta">
+        <a class="btn" href="/products/">Xem danh mục</a>
+        <a class="btn btn-secondary" href="/guides/">Bắt đầu với hướng dẫn</a>
+      </div>
+    </section>
+
+    {
+      hero && (
+        <section class="feature">
+          <a href={`/products/${hero.id}/`} class="feature-inner">
+            <div class="feature-media well">
+              {hero.data.image ? (
+                <Image src={hero.data.image} alt={hero.data.imageAlt ?? hero.data.title} widths={[640, 1280]} sizes="(max-width: 900px) 92vw, 720px" />
+              ) : (
+                <span class="label-caps dim">Nổi bật</span>
+              )}
+            </div>
+            <div class="feature-body">
+              <span class="label-caps">Sản phẩm nổi bật</span>
+              <h2>{hero.data.title}</h2>
+              <p class="body-lg muted">{hero.data.tagline}</p>
+              <span class="btn-ghost">[ Xem chi tiết &rarr; ]</span>
+            </div>
+          </a>
+        </section>
+      )
+    }
+
+    <section class="block">
+      <div class="rule">
+        <span class="label-caps">Phần cứng</span>
+        <a href="/products/" class="btn-ghost">[ Tất cả sản phẩm &rarr; ]</a>
+      </div>
+      {
+        shelf.length > 0 ? (
+          <div class="grid">
+            {shelf.map((product) => (
+              <ProductCard product={product} />
+            ))}
+          </div>
+        ) : (
+          <p class="muted">
+            Chưa có sản phẩm nào — thêm file Markdown vào <code>src/content/products/</code>.
+          </p>
+        )
+      }
+    </section>
+
+    <section class="block two-col">
+      <div>
+        <div class="rule">
+          <span class="label-caps">Nhật ký</span>
+          <a href="/blog/" class="btn-ghost">[ Tất cả &rarr; ]</a>
+        </div>
+        {
+          posts.slice(0, 3).map((entry) => (
+            <a href={`/blog/${entry.id}/`} class="row">
+              <span class="row-meta mono-spec-sm dim">
+                {formatDate(entry.data.pubDate)}
+              </span>
+              <span class="headline-sm">{entry.data.title}</span>
+              <span class="body-sm muted clamp">{entry.data.description}</span>
+            </a>
+          ))
+        }
+      </div>
+      <div>
+        <div class="rule">
+          <span class="label-caps">Hướng dẫn</span>
+          <a href="/guides/" class="btn-ghost">[ Tất cả &rarr; ]</a>
+        </div>
+        {
+          guides.slice(0, 3).map((entry) => (
+            <a href={`/guides/${entry.id}/`} class="row">
+              <span class="row-meta mono-spec-sm dim">
+                {entry.data.tags.slice(0, 2).join(' // ') || 'Hướng dẫn'}
+              </span>
+              <span class="headline-sm">{entry.data.title}</span>
+              <span class="body-sm muted clamp">{entry.data.description}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .dispatch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-block: var(--space-sm);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+
+  .hero {
+    padding-block: var(--space-3xl) var(--space-2xl);
+    max-width: 60ch;
+  }
+  @media (min-width: 1024px) {
+    .hero { padding-block: var(--space-4xl) var(--space-3xl); }
+  }
+  .hero h1 { margin-block: var(--space-md) var(--space-lg); }
+  .lede { max-width: 48ch; }
+  .cta {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-top: var(--space-xl);
+  }
+  /* Wrapped buttons of different widths read as ragged. Below 480px give them
+     the full column so the stack has one edge. */
+  @media (max-width: 479px) {
+    .cta { flex-direction: column; align-items: stretch; }
+  }
+
+  .feature {
+    margin-bottom: var(--space-3xl);
+  }
+  .feature-inner {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+    background: var(--surface-low);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm);
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .feature-inner:hover { border-color: var(--outline-variant); }
+  @media (min-width: 800px) {
+    .feature-inner {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--space-xl);
+    }
+  }
+  .feature-media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .feature-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .feature-inner:hover .feature-media :global(img) { transform: scale(1.015); }
+  .feature-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-md) var(--space-lg);
+  }
+  .feature-body h2 { margin: 0; }
+  .feature-body p { margin: 0; }
+  .feature-body .btn-ghost { margin-top: var(--space-sm); }
+
+  .block { margin-bottom: var(--space-3xl); }
+
+  .grid {
+    display: grid;
+    gap: var(--space-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+  }
+
+  .two-col {
+    display: grid;
+    gap: var(--space-2xl);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .two-col { grid-template-columns: 1fr 1fr; gap: var(--space-3xl); }
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-block: var(--space-md);
+    border-bottom: 1px solid var(--surface-highest);
+  }
+  .row:hover .headline-sm { color: var(--on-surface); }
+  .row-meta { text-transform: uppercase; }
+  .clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

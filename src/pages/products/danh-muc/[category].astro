@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import CategoryChips from '../../../components/CategoryChips.astro';
+import { CATEGORY_LABEL, isPublished, sortProducts } from '../../../utils';
+
+type CategoryKey = keyof typeof CATEGORY_LABEL;
+
+/**
+ * Zero-JS category filtering: one prerendered page per category that actually
+ * has products. These also give search engines a landing page per category,
+ * which a client-side filter on one URL would not.
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  const products = await getCollection('products', isPublished);
+  const keys = Object.keys(CATEGORY_LABEL) as CategoryKey[];
+  return keys
+    .filter((key) => products.some((p) => p.data.category === key))
+    .map((key) => ({
+      params: { category: key },
+      props: { category: key, products },
+    }));
+};
+
+interface Props {
+  category: CategoryKey;
+  products: CollectionEntry<'products'>[];
+}
+
+const { category, products } = Astro.props;
+
+const items = sortProducts(products.filter((p) => p.data.category === category));
+const inStock = items.filter((p) => p.data.availability === 'in-stock').length;
+const label = CATEGORY_LABEL[category];
+---
+
+<BaseLayout
+  title={label}
+  description={`${label} cho các dự án Xiaozhi AI trên ESP32 — kèm thông số và hướng dẫn sử dụng.`}
+>
+  <div class="container">
+    <header class="head">
+      <div class="rule">
+        <a href="/products/" class="label-caps back">&larr; Tất cả sản phẩm</a>
+        <span class="mono-spec-sm dim">{items.length} sản phẩm</span>
+      </div>
+      <h1>{label}</h1>
+
+      <CategoryChips products={products} active={category} />
+
+      <div class="strip">
+        <span class="label-caps">Hiển thị {items.length} sản phẩm</span>
+        <span class="status label-caps">
+          <span class="dot blue"></span>
+          Còn hàng: {inStock}
+        </span>
+      </div>
+    </header>
+
+    <div class="grid">
+      {items.map((product) => <ProductCard product={product} />)}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-top: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+  h1 { margin-bottom: var(--space-lg); }
+  .back { color: var(--on-surface-variant); }
+  .back:hover { color: var(--on-surface); }
+
+  .strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: var(--space-2xl);
+  }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+  }
+</style>

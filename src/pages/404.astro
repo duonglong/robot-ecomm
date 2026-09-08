@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Không tìm thấy trang" description="Trang này không tồn tại.">
+  <div class="container page">
+    <div class="rule">
+      <span class="label-caps">Lỗi</span>
+      <span class="mono-spec-sm dim">404 // không tìm thấy</span>
+    </div>
+    <h1>Trang này đã lăn đi mất.</h1>
+    <p class="body-lg muted">
+      Liên kết đã hỏng hoặc trang đã được chuyển. Thử xem danh mục sản phẩm
+      hoặc mục hướng dẫn.
+    </p>
+    <div class="cta">
+      <a class="btn" href="/products/">Xem danh mục</a>
+      <a class="btn btn-secondary" href="/">Trang chủ</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-2xl) var(--space-4xl);
+    max-width: 44rem;
+  }
+  h1 { margin-bottom: var(--space-md); }
+  .cta {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-top: var(--space-xl);
+  }
+  @media (max-width: 479px) {
+    .cta { flex-direction: column; align-items: stretch; }
+  }
+</style>

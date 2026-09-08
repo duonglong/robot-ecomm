@@ -1,0 +1,91 @@
+---
+import { SHOP_NAME, SHOP_URL } from '../consts';
+
+interface Props {
+  buyUrl?: string;
+  availability: 'in-stock' | 'preorder' | 'sold-out';
+  sku: string;
+}
+
+const { buyUrl, availability, sku } = Astro.props;
+
+const href = buyUrl || SHOP_URL || undefined;
+const isDeepLink = Boolean(buyUrl);
+const sellable = availability !== 'sold-out' && Boolean(href);
+
+const label = !sellable
+  ? availability === 'sold-out'
+    ? 'Hết hàng'
+    : 'Chưa lên sàn'
+  : availability === 'preorder'
+    ? `Đặt trước trên ${SHOP_NAME}`
+    : isDeepLink
+      ? `Xem giá & mua trên ${SHOP_NAME}`
+      : `Tìm trên ${SHOP_NAME}`;
+
+const note = !sellable
+  ? availability === 'sold-out'
+    ? 'Tạm hết hàng. Theo dõi RSS để biết khi có hàng trở lại.'
+    : 'Chưa lên sàn. Theo dõi RSS để biết khi sản phẩm mở bán.'
+  : isDeepLink
+    ? `Giá, tồn kho và phí vận chuyển hiện tại xem trên ${SHOP_NAME}.`
+    : `Mở gian hàng ${SHOP_NAME} của chúng tôi — tìm mã ${sku}.`;
+---
+
+<div class="dock">
+  <div class="meta">
+    <span class="label-caps">Thanh toán</span>
+    <span class="mono-spec-lg">{SHOP_NAME}</span>
+  </div>
+
+  {
+    sellable ? (
+      <a class="btn action" href={href} target="_blank" rel="noopener">
+        <span>{label}</span>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 4h6v6" />
+          <path d="M20 4 11 13" />
+          <path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+        </svg>
+        <span class="sr-only">(mở {SHOP_NAME} trong tab mới)</span>
+      </a>
+    ) : (
+      <span class="btn action" aria-disabled="true" role="link">
+        {label}
+      </span>
+    )
+  }
+</div>
+<p class="note body-sm dim">{note}</p>
+
+<style>
+  /* Mirrors the reference's sticky purchase dock: a mono meta block on the
+     left, the solid action filling the rest. */
+  .dock {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-md);
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2xs);
+    flex: none;
+  }
+  .action {
+    flex: 1;
+    min-width: 0;
+  }
+  .action span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .note {
+    margin: var(--space-sm) 0 0;
+  }
+  @media (max-width: 400px) {
+    .dock { flex-direction: column; gap: var(--space-sm); }
+  }
+</style>

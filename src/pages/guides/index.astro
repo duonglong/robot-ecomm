@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { isPublished } from '../../utils';
+
+const guides = (await getCollection('guides', isPublished)).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+---
+
+<BaseLayout
+  title="Hướng dẫn"
+  description="Hướng dẫn từng bước cho phần cứng robot AI — ROS 2, cảm biến, nguồn điện và lắp ráp."
+>
+  <div class="container page">
+    <header>
+      <div class="rule">
+        <span class="label-caps">Tài liệu</span>
+        <span class="mono-spec-sm dim">{guides.length} bài</span>
+      </div>
+      <h1>Hướng dẫn</h1>
+      <p class="body-lg muted lede">
+        Những hướng dẫn được cập nhật thường xuyên. Hãy đọc ở đây trước khi
+        mua bất cứ thứ gì.
+      </p>
+    </header>
+
+    {guides.map((entry) => <ArticleCard entry={entry} base="/guides" showDate={false} />)}
+    {guides.length === 0 && <p class="muted">Chưa có hướng dẫn nào.</p>}
+  </div>
+</BaseLayout>
+
+<style>
+  .page { padding-top: var(--space-lg); max-width: 56rem; }
+  h1 { margin-bottom: var(--space-sm); }
+  .lede { max-width: 50ch; margin-bottom: var(--space-xl); }
+</style>
