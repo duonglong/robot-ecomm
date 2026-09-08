@@ -24,7 +24,7 @@ const groups = (Object.keys(CATEGORY_LABEL) as Array<keyof typeof CATEGORY_LABEL
   groups.length > 1 && (
     <nav class="scroll-x filters" aria-label="Nhóm sản phẩm">
       <a
-        href="/products/"
+        href="/"
         class:list={['chip', { 'is-active': active === undefined }]}
         aria-current={active === undefined ? 'page' : undefined}
       >

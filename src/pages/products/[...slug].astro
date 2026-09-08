@@ -45,7 +45,9 @@ const jsonLd = {
   '@type': 'Product',
   name: d.title,
   description: d.tagline,
-  sku: d.sku,
+  // A placeholder SKU in structured data is worse than no SKU — Google reads
+  // this field and it ends up in merchant listings.
+  ...(/^TODO[-_]/i.test(d.sku) ? {} : { sku: d.sku }),
   category: CATEGORY_LABEL[d.category],
   ...(purchaseUrl ? { url: purchaseUrl } : {}),
 };
@@ -57,8 +59,10 @@ const dotClass =
 <BaseLayout title={d.title} description={d.tagline}>
   <div class="container">
     <div class="rule crumb">
-      <a href="/products/" class="label-caps back">&larr; Sản phẩm</a>
-      <span class="mono-spec-sm dim">{CATEGORY_LABEL[d.category]} // {d.sku}</span>
+      <a href="/" class="label-caps back">&larr; Sản phẩm</a>
+      <span class="mono-spec-sm dim">
+        {CATEGORY_LABEL[d.category]}{!/^TODO[-_]/i.test(d.sku) && ` // ${d.sku}`}
+      </span>
     </div>
 
     <div class="layout">
@@ -145,7 +149,7 @@ const dotClass =
     }
     /* The image column is tall; the buy dock should stay reachable while the
        reader scrolls the spec matrix. */
-    .detail { position: sticky; top: 76px; }
+    .detail { position: sticky; top: calc(var(--header-h) + var(--space-lg)); }
   }
 
   .frame {

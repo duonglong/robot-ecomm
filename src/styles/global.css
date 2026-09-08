@@ -54,6 +54,11 @@
   --space-4xl: 6rem;
   --space-5xl: 9rem;
 
+  /* Header height. Anything that has to clear the sticky bar — sticky
+     columns, scroll-margin on anchor targets — derives from this, so the
+     two cannot drift apart when the bar is resized. */
+  --header-h: 120px;
+
   --gutter: 1rem;
   --container-max: 1440px;
   --measure: 68ch;

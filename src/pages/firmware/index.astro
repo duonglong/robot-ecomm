@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FirmwareCard from '../../components/FirmwareCard.astro';
+import { isPublished } from '../../utils';
+
+const builds = (await getCollection('firmware', isPublished)).sort(
+  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title, 'vi'),
+);
+const ready = builds.filter((b) => b.data.flashUrl).length;
+---
+
+<BaseLayout
+  title="Firmware"
+  description="Firmware Xiaozhi cho các dòng bo ESP32-S3 và ESP32-C3 chúng tôi bán — nạp trực tiếp qua trình duyệt, không cần cài phần mềm."
+>
+  <div class="container">
+    <header class="head">
+      <h1 class="sr-only">Firmware</h1>
+
+      <div class="strip">
+        <span class="label-caps">{builds.length} bản firmware</span>
+        <span class="status label-caps">
+          <span class:list={['dot', ready > 0 ? 'blue' : '']}></span>
+          Sẵn sàng: {ready}
+        </span>
+      </div>
+    </header>
+
+    <div class="grid">
+      {builds.map((entry) => <FirmwareCard entry={entry} />)}
+    </div>
+
+
+  </div>
+</BaseLayout>
+
+<style>
+  .head { padding-top: var(--space-lg); margin-bottom: var(--space-xl); }
+  .strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: var(--space-2xl);
+  }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md); }
+  }
+</style>

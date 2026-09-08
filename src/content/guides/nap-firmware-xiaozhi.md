@@ -17,7 +17,7 @@ Nạp firmware Xiaozhi không cần cài IDE hay công cụ dòng lệnh. Trình
 - **Cáp USB truyền dữ liệu.** Đây là lỗi phổ biến nhất: rất nhiều cáp đi kèm
   củ sạc chỉ có hai dây nguồn, không có dây dữ liệu. Bo sẽ sáng đèn nhưng máy
   tính không thấy gì cả.
-- **Bo ESP32-S3 hoặc ESP32-C3.** Xem [gian hàng](/products/) nếu bạn chưa có.
+- **Bo ESP32-S3 hoặc ESP32-C3.** Xem [gian hàng](/) nếu bạn chưa có.
 
 ## Các bước
 

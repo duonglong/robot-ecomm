@@ -1,14 +1,19 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import { AVAILABILITY_LABEL, parseSpec } from '../utils';
+import { AVAILABILITY_LABEL, CATEGORY_LABEL, parseSpec } from '../utils';
 
 interface Props {
   product: CollectionEntry<'products'>;
 }
 
 const { product } = Astro.props;
-const { title, tagline, image, imageAlt, availability, specs } = product.data;
+const { title, tagline, image, imageAlt, availability, specs, sku, category } =
+  product.data;
+
+// With no photo the well shows an identifier. A real SKU is useful; a seeding
+// placeholder is noise, so fall back to the category name.
+const placeholder = /^TODO[-_]/i.test(sku) ? CATEGORY_LABEL[category] : sku;
 const href = `/products/${product.id}/`;
 
 // The reference cards carry one machined detail stamped over the image well.
@@ -32,7 +37,7 @@ const dotClass =
             sizes="(max-width: 640px) 45vw, 320px"
           />
         ) : (
-          <span class="placeholder label-caps">{product.data.sku}</span>
+          <span class="placeholder label-caps">{placeholder}</span>
         )
       }
       {stamp && <span class="stamp mono-spec-sm">{stamp}</span>}

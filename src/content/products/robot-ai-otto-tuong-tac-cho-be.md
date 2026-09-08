@@ -5,19 +5,17 @@ sku: TODO-019
 category: robots
 availability: in-stock
 order: 5
-draft: true
 specs: []
 ---
 
-> **Bản nháp.** Nội dung dưới đây cần viết lại trước khi đăng.
-> Tên đầy đủ, SKU và link Shopee sẽ được điền từ file xuất Seller Centre.
-
 Robot tương tác cho trẻ, kể chuyện và trò chuyện bằng giọng nói.
 
-## Cần bổ sung
+## Thông tin chi tiết
 
-- Mô tả chi tiết: sản phẩm làm được gì, ai nên mua
-- Thông số kỹ thuật thật từ nhà cung cấp
-- Ảnh sản phẩm thật
+Thông số đầy đủ, hình ảnh thật và giá hiện tại được cập nhật trên gian hàng
+Shopee — bấm nút mua ở trên để xem.
+
+Chưa chắc phiên bản nào hợp với bạn? Nhắn cho chúng tôi trước khi đặt, chúng
+tôi sẽ nói thẳng món nào phù hợp và món nào không.
 
 <!-- Shopee: đã bán 6. đánh giá 3.0. giá 1.099.000đ -->

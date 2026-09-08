@@ -55,5 +55,5 @@ tiết kiệm ở khâu này. Mua bo có PSRAM.
 
 ## Nếu bạn không muốn tự chọn
 
-Các [robot AI hoàn chỉnh](/products/) đã được cấu hình sẵn đúng bản firmware
+Các [robot AI hoàn chỉnh](/) đã được cấu hình sẵn đúng bản firmware
 cho phần cứng bên trong. Không phải tra bảng, không phải nạp gì cả.

@@ -1,22 +1,14 @@
 ---
-import { CONTACT_EMAIL, DISCORD_URL, GITHUB_URL, SHIPS_FROM, SITE_TITLE } from '../consts';
+import { CONTACT_EMAIL, DISCORD_URL, GITHUB_URL, SITE_TITLE } from '../consts';
 const year = new Date().getFullYear();
 ---
 
 <footer>
   <div class="container">
-    <div class="rule">
-      <span class="label-caps">Giao hàng</span>
-      {SHIPS_FROM && <span class="mono-spec-sm dim">Giao từ {SHIPS_FROM}</span>}
-    </div>
 
     <div class="cols">
-      <p class="muted body-sm blurb">
-        Phần cứng và tài liệu lắp ráp cho những người tự tay dựng robot.
-        Mọi linh kiện ở đây đều là thứ chúng tôi đã trực tiếp sử dụng.
-      </p>
       <nav aria-label="Liên kết chân trang">
-        <a href="/products/" class="mono-spec-sm">Sản phẩm</a>
+        <a href="/" class="mono-spec-sm">Sản phẩm</a>
         <a href="/guides/" class="mono-spec-sm">Hướng dẫn</a>
         <a href="/blog/" class="mono-spec-sm">Nhật ký</a>
         <a href="/rss.xml" class="mono-spec-sm">RSS</a>
@@ -35,25 +27,12 @@ const year = new Date().getFullYear();
 <style>
   footer {
     margin-top: var(--space-4xl);
-    padding-block: var(--space-xl) var(--space-2xl);
+    padding-block: var(--space-lg) var(--space-xl);
     border-top: 1px solid var(--outline-variant);
     background: var(--surface-low);
   }
   .cols {
-    display: grid;
-    gap: var(--space-lg);
-    grid-template-columns: 1fr;
-    margin-bottom: var(--space-2xl);
-  }
-  @media (min-width: 768px) {
-    .cols {
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: var(--space-3xl);
-    }
-  }
-  .blurb {
-    max-width: 44ch;
-    margin: 0;
+    margin-bottom: var(--space-lg);
   }
   nav {
     display: flex;

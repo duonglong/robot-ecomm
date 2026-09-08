@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import logoMark from '../assets/brand/logo-mark.png';
 import { NAV, SITE_TITLE } from '../consts';
 
 const path = Astro.url.pathname;
@@ -8,10 +10,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 <header>
   <div class="container bar">
     <a href="/" class="brand" aria-label={`${SITE_TITLE} — trang chủ`}>
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" class="mark">
-        <path d="M12 2.5 21.5 21H2.5L12 2.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
-        <circle cx="16.4" cy="6.2" r="1.5" fill="currentColor"></circle>
-      </svg>
+      <Image src={logoMark} alt="" class="mark" width={162} height={84} loading="eager" />
       <span class="wordmark">{SITE_TITLE}</span>
     </a>
 
@@ -45,16 +44,20 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     align-items: center;
     justify-content: space-between;
     gap: var(--space-md);
-    min-height: 56px;
+    min-height: var(--header-h);
   }
   .brand {
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
   }
+  /* Shipped at 3x; constrained by height so the lockup keeps its baseline
+     whatever the artwork's aspect ratio is. */
   .mark {
-    color: var(--on-surface);
+    height: 28px;
+    width: auto;
     flex: none;
+    display: block;
   }
   /* The wordmark is the one place tracking opens up rather than tightens —
      it reads as an engraved chassis stamp, matching the reference logo. */
@@ -97,6 +100,9 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   /* Vietnamese nav labels are ~40% wider than the English ones. Below 380px
      brand + nav leave under 16px of slack, so drop the wordmark and keep the
      mark — the logo still identifies the site and the nav stops crowding. */
+  @media (max-width: 420px) {
+    .mark { height: 24px; }
+  }
   @media (max-width: 379px) {
     .wordmark {
       position: absolute;

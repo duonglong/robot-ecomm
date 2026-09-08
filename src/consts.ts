@@ -11,7 +11,7 @@ export const CONTACT_EMAIL = 'hello@example.com';
 // button activates at once, pointing at the shop; a product with its own
 // `buyUrl` overrides it with a deep link to that listing.
 // Leave it empty and buttons stay disabled — safer than shipping a dead link.
-export const SHOP_URL = '';
+export const SHOP_URL = 'https://shopee.vn/nguyenduchuy970';
 export const SHOP_NAME = 'Shopee';
 
 // Community links. Empty string hides the link.
@@ -23,7 +23,8 @@ export const GITHUB_URL = '';
 export const SHIPS_FROM = '';
 
 export const NAV = [
-  { href: '/products/', label: 'Sản phẩm' },
+  { href: '/', label: 'Sản phẩm' },
+  { href: '/firmware/', label: 'Firmware' },
   { href: '/guides/', label: 'Hướng dẫn' },
   { href: '/blog/', label: 'Nhật ký' },
 ] as const;

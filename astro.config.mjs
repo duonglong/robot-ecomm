@@ -9,6 +9,11 @@ const SITE = process.env.SITE_URL ?? 'https://robot-ecomm.pages.dev';
 export default defineConfig({
   site: SITE,
   integrations: [sitemap()],
+  // The catalogue moved to the site root. /products/ was live before that, so
+  // keep it reachable instead of returning a 404 to anything already indexed.
+  redirects: {
+    '/products': '/',
+  },
   // Static output: every page is prerendered to HTML at build time.
   // This is what makes Cloudflare Pages free — no server runs per request.
   output: 'static',

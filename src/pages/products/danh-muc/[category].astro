@@ -43,11 +43,7 @@ const label = CATEGORY_LABEL[category];
 >
   <div class="container">
     <header class="head">
-      <div class="rule">
-        <a href="/products/" class="label-caps back">&larr; Tất cả sản phẩm</a>
-        <span class="mono-spec-sm dim">{items.length} sản phẩm</span>
-      </div>
-      <h1>{label}</h1>
+      <h1 class="sr-only">{label}</h1>
 
       <CategoryChips products={products} active={category} />
 
@@ -71,9 +67,6 @@ const label = CATEGORY_LABEL[category];
     padding-top: var(--space-lg);
     margin-bottom: var(--space-xl);
   }
-  h1 { margin-bottom: var(--space-lg); }
-  .back { color: var(--on-surface-variant); }
-  .back:hover { color: var(--on-surface); }
 
   .strip {
     display: flex;

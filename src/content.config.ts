@@ -69,4 +69,30 @@ const guides = defineCollection({
     articleFields.extend({ heroImage: image().optional() }),
 });
 
-export const collections = { products, posts, guides };
+/**
+ * Firmware builds offered for the boards we sell. This is a link directory,
+ * not a file host: `flashUrl` points at a web flasher and `binUrl` at a .bin
+ * download, both hosted wherever the firmware actually lives.
+ */
+const firmware = defineCollection({
+  loader: glob({ base: './src/content/firmware', pattern: '**/*.md' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      // Spoken trigger phrase, shown on the card.
+      wakeword: z.string().optional(),
+      // Both optional: a build with neither renders its buttons disabled
+      // rather than linking nowhere.
+      flashUrl: z.url().optional(),
+      binUrl: z.url().optional(),
+      // Slug of a product this firmware is for, e.g. esp32-s3-n16r8-...
+      forProduct: z.string().optional(),
+      image: image().optional(),
+      imageAlt: z.string().optional(),
+      order: z.number().default(0),
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { products, posts, guides, firmware };

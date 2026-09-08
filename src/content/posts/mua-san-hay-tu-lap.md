@@ -54,6 +54,6 @@ là xong.
 
 ## Bắt đầu ở đâu
 
-Xem [toàn bộ sản phẩm](/products/), hoặc nếu bạn chọn hướng tự lắp, đọc
+Xem [toàn bộ sản phẩm](/), hoặc nếu bạn chọn hướng tự lắp, đọc
 [hướng dẫn nạp firmware](/guides/nap-firmware-xiaozhi/) trước khi mua để biết
 mình sắp làm gì.

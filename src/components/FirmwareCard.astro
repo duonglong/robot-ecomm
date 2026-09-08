@@ -1,0 +1,119 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'firmware'>;
+}
+
+const { entry } = Astro.props;
+const { title, description, wakeword, flashUrl, binUrl, forProduct, image, imageAlt } =
+  entry.data;
+---
+
+<article class="card">
+  <div class="well frame">
+    {
+      image ? (
+        <Image src={image} alt={imageAlt ?? ''} widths={[320, 640]} sizes="(max-width: 640px) 45vw, 300px" />
+      ) : (
+        <span class="placeholder label-caps">Firmware</span>
+      )
+    }
+  </div>
+
+  <div class="body">
+    <h3 class="headline-sm">{title}</h3>
+    <p class="body-sm muted">{description}</p>
+
+    {
+      wakeword && (
+        <p class="wake mono-spec-sm">
+          <span class="dot amber" /> Wakeword: {wakeword}
+        </p>
+      )
+    }
+
+    <div class="actions">
+      {
+        flashUrl ? (
+          <a class="btn" href={flashUrl} target="_blank" rel="noopener">
+            Nạp FW
+          </a>
+        ) : (
+          <span class="btn" aria-disabled="true" role="link">Sắp có</span>
+        )
+      }
+      {
+        binUrl ? (
+          <a class="btn btn-secondary" href={binUrl} target="_blank" rel="noopener">
+            Tải BIN
+          </a>
+        ) : (
+          <span class="btn btn-secondary" aria-disabled="true" role="link">Tải BIN</span>
+        )
+      }
+    </div>
+
+    {
+      forProduct && (
+        <a class="btn-ghost forprod" href={`/products/${forProduct}/`}>
+          [ Xem bo mạch &rarr; ]
+        </a>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-low);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm);
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .card:hover { border-color: var(--outline-variant); }
+
+  .frame {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    margin-bottom: var(--space-sm);
+  }
+  .frame :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .placeholder { color: var(--outline); }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-xs) var(--space-xs) var(--space-xs);
+  }
+  h3 { margin-bottom: var(--space-2xs); }
+  .body > p { margin: 0 0 var(--space-sm); }
+  .wake {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--on-surface-variant);
+    margin-bottom: var(--space-md) !important;
+  }
+
+  /* Buttons sit at the card foot regardless of description length. */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-top: auto;
+  }
+  .actions .btn {
+    min-height: 40px;
+    padding-inline: var(--space-sm);
+    font-size: 14px;
+  }
+  .forprod { margin-top: var(--space-sm); }
+</style>

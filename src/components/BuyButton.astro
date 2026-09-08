@@ -9,6 +9,11 @@ interface Props {
 
 const { buyUrl, availability, sku } = Astro.props;
 
+// Placeholder SKUs exist while a catalogue is being seeded. Telling a customer
+// to "search for TODO-001" is worse than saying nothing, so the copy drops the
+// code until a real one is set.
+const hasRealSku = Boolean(sku) && !/^TODO[-_]/i.test(sku);
+
 const href = buyUrl || SHOP_URL || undefined;
 const isDeepLink = Boolean(buyUrl);
 const sellable = availability !== 'sold-out' && Boolean(href);
@@ -29,7 +34,9 @@ const note = !sellable
     : 'Chưa lên sàn. Theo dõi RSS để biết khi sản phẩm mở bán.'
   : isDeepLink
     ? `Giá, tồn kho và phí vận chuyển hiện tại xem trên ${SHOP_NAME}.`
-    : `Mở gian hàng ${SHOP_NAME} của chúng tôi — tìm mã ${sku}.`;
+    : hasRealSku
+      ? `Mở gian hàng ${SHOP_NAME} của chúng tôi — tìm mã ${sku}.`
+      : `Mở gian hàng ${SHOP_NAME} của chúng tôi để xem giá và đặt hàng.`;
 ---
 
 <div class="dock">
